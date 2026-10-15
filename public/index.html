@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#090a0b">
+  <title>LOEWI RACE 7 — Leaderboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/style.css">
+  <script src="/script.js" defer></script>
+</head>
+<body>
+  <div class="ambient"></div>
+  <header class="topbar">
+    <a class="brand" href="/" aria-label="LOEWI RACE 7 beranda"><span>LOEWI</span> <b>RACE 7</b></a>
+    <div class="top-actions">
+      <span class="live-dot">LEADERBOARD</span>
+      <button class="button button-ghost" id="adminOpen">Admin Login</button>
+      <button class="button button-ghost hidden" id="adminLogout">Logout</button>
+    </div>
+  </header>
+  <main class="shell">
+    <section class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow">COMPETITIVE RANKING SYSTEM</p>
+        <h1>PLAY HARD.<br><span>RANK HIGH.</span></h1>
+        <p class="hero-sub">Satu papan skor. Semua persaingan.</p>
+      </div>
+      <div class="hero-mark" aria-hidden="true"><span>7</span><i>RACE</i></div>
+    </section>
+
+    <section class="stats" aria-label="Ringkasan leaderboard">
+      <div class="stat-card"><span>Total Peserta</span><strong id="totalParticipants">—</strong></div>
+      <div class="stat-card"><span>Poin Tertinggi</span><strong id="topPoints">—</strong></div>
+      <div class="stat-card"><span>Level Aktif</span><strong id="totalLevels">—</strong></div>
+    </section>
+
+    <section class="board">
+      <div class="board-heading">
+        <div><p class="eyebrow">CURRENT STANDINGS</p><h2>RACE <span>BOARD</span></h2></div>
+        <div class="admin-chip hidden" id="adminBadge">ADMIN MODE</div>
+      </div>
+      <div class="filters">
+        <label class="searchbox"><span aria-hidden="true">⌕</span><input id="searchInput" type="search" placeholder="Cari nama peserta..." autocomplete="off"></label>
+        <select id="levelFilter" aria-label="Filter level"><option value="">Semua level</option></select>
+        <button class="button button-ghost" id="refreshBtn">↻ Refresh</button>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th class="rank-col">No</th><th>Nama</th><th>Level</th><th class="points-col">Poin</th><th class="admin-col hidden">Aksi</th></tr></thead>
+          <tbody id="leaderboardBody"><tr><td colspan="5" class="empty">Memuat leaderboard...</td></tr></tbody>
+        </table>
+      </div>
+      <div class="board-footer"><span id="resultCount">Memuat data...</span><div class="pagination"><button id="prevPage" class="page-btn" disabled>←</button><span id="pageLabel">1 / 1</span><button id="nextPage" class="page-btn" disabled>→</button></div></div>
+    </section>
+
+    <section class="admin-panel hidden" id="adminPanel">
+      <div class="board-heading"><div><p class="eyebrow">CONTROL CENTER</p><h2>ADMIN <span>PANEL</span></h2></div></div>
+      <div class="admin-grid">
+        <form id="addForm" class="form-card">
+          <h3>Tambah Peserta</h3>
+          <label>Nama<input name="name" maxlength="80" required placeholder="Nama peserta"></label>
+          <label>Level HC<input name="level" maxlength="30" required placeholder="Contoh: HC3B"></label>
+          <label>Poin awal<input name="points" type="number" step="1" value="0" required></label>
+          <button class="button button-primary" type="submit">+ Tambah peserta</button>
+        </form>
+        <div class="form-card">
+          <h3>Data & Laporan</h3>
+          <p class="muted">Unduh ranking saat ini atau simpan salinan database untuk backup.</p>
+          <div class="stack-buttons"><button class="button button-secondary" id="csvExport">Download CSV</button><button class="button button-secondary" id="pdfExport">Download PDF</button><button class="button button-ghost" id="backupBtn">Backup Database</button></div>
+          <button class="button button-ghost full" id="historyBtn">Lihat Riwayat Poin</button>
+        </div>
+      </div>
+      <div class="history-card hidden" id="historyCard"><div class="history-head"><h3>Riwayat Poin Terbaru</h3><button id="closeHistory" class="icon-btn" aria-label="Tutup">×</button></div><div id="historyContent" class="history-list"></div></div>
+    </section>
+    <footer><span>© <span id="year"></span> LOEWI RACE 7</span><span>BUILT FOR THE COMPETITION <b>●</b></span></footer>
+  </main>
+
+  <div class="modal hidden" id="loginModal" role="dialog" aria-modal="true" aria-labelledby="loginTitle">
+    <div class="modal-backdrop" data-close="login"></div>
+    <form class="modal-card" id="loginForm">
+      <button class="modal-close" type="button" data-close="login" aria-label="Tutup">×</button>
+      <p class="eyebrow">RESTRICTED ACCESS</p><h2 id="loginTitle">ADMIN <span>LOGIN</span></h2>
+      <p class="muted">Masuk untuk mengelola peserta dan poin.</p>
+      <label>Username<input name="username" autocomplete="username" required maxlength="100"></label>
+      <label>Password<input name="password" type="password" autocomplete="current-password" required maxlength="200"></label>
+      <p class="form-error" id="loginError"></p>
+      <button class="button button-primary full" type="submit">Masuk ke dashboard</button>
+    </form>
+  </div>
+
+  <div class="modal hidden" id="editModal" role="dialog" aria-modal="true" aria-labelledby="editTitle">
+    <div class="modal-backdrop" data-close="edit"></div>
+    <form class="modal-card" id="editForm">
+      <button class="modal-close" type="button" data-close="edit" aria-label="Tutup">×</button>
+      <p class="eyebrow">PARTICIPANT SETTINGS</p><h2 id="editTitle">EDIT <span>PESERTA</span></h2>
+      <input type="hidden" name="id">
+      <label>Nama<input name="name" maxlength="80" required></label>
+      <label>Level HC<input name="level" maxlength="30" required></label>
+      <div class="form-two"><label>Mode poin<select name="mode"><option value="add">Tambah / kurangi</option><option value="set">Atur total poin</option></select></label><label>Nilai poin<input name="value" type="number" step="1" value="0" required></label></div>
+      <label>Catatan perubahan poin<input name="description" maxlength="200" placeholder="Opsional"></label>
+      <p class="form-error" id="editError"></p>
+      <button class="button button-primary full" type="submit">Simpan perubahan</button>
+      <button class="button button-danger full" type="button" id="deleteParticipant">Hapus peserta</button>
+    </form>
+  </div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+</body>
+</html>
