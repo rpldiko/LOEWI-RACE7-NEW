@@ -1,21 +1,26 @@
+```json
 {
   "name": "loewi-race7",
-  "version": "1.0.0",
-  "description": "Web leaderboard and point manager for LOEWI RACE 7",
+  "version": "2.0.0",
+  "private": true,
+  "description": "LOEWI RACE 7 ranking website",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js",
-    "dev": "node --watch server.js"
+    "start": "node server.js"
   },
-  "engines": { "node": ">=18" },
+  "engines": {
+    "node": ">=20"
+  },
   "dependencies": {
     "bcryptjs": "^2.4.3",
+    "better-sqlite3": "^11.8.1",
+    "connect-sqlite3": "^0.9.16",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "express-rate-limit": "^7.5.0",
     "express-session": "^1.18.1",
     "helmet": "^8.0.0",
-    "pdfkit": "^0.16.0",
-    "sql.js": "^1.13.0"
+    "pdfkit": "^0.16.0"
   }
 }
+```
